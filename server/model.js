@@ -17,8 +17,14 @@ exports.selectArticle = (Id) => {
       return Promise.reject({ status: 404, msg: 'article not found'})
     }
     return result.rows[0];
-  return db.query(`SELECT * FROM topics;`)
+  });
+}
+
+
+exports.selectUsers = () => {
+  return db.query(`SELECT * 
+  FROM users;`)
   .then((result) => {
-    return result.rows
+    return result.rows;
   })
 }
