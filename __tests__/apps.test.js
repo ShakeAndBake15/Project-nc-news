@@ -65,7 +65,7 @@ describe('GET /api/articles/:article_id', () => {
 })
 
 describe('Error handling', () => {
-    it('status: 404, should respond with 404 "incorrect path" when url path is incorrect', () => {
+    it('status: 404, should respond with 404 "incorrect path" when url path is incorrect for topics', () => {
         return request(app)
         .get('/api/tropics')
         .expect(404)
@@ -73,6 +73,14 @@ describe('Error handling', () => {
           expect(body.msg).toBe('Incorrect path')
         })
     })
+    it('status: 404, should respond with 404 "incorrect path" when url path is incorrect for users', () => {
+      return request(app)
+      .get('/api/user')
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe('Incorrect path')
+      })
+  })
     it('status: 404, Should return with 404 "article not found" when parametric endpoint is incorrect', () => {
       return request(app)
       .get('/api/articles/22')
