@@ -1,4 +1,4 @@
-const { selectTopics } = require('./model')
+const { selectTopics, selectUsers } = require('./model')
 
 exports.getTopics = (req, res, next) => {
     selectTopics().then((topics) => {
@@ -8,3 +8,10 @@ exports.getTopics = (req, res, next) => {
     })
 }
 
+exports.getUsers = (req, res, next) => {
+    selectUsers().then((users) => {
+        res.status(200).send({ users });
+    }).catch((err) => {
+        console.log(err)
+    })
+}
