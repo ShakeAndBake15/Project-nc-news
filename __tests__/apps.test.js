@@ -59,7 +59,7 @@ describe('Error handling', () => {
       .get('/api/articles/22')
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe('Incorrect path')
+        expect(body.msg).toBe('article not found')
       })
     })
 })

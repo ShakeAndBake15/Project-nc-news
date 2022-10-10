@@ -14,7 +14,7 @@ exports.selectArticle = (Id) => {
   WHERE article_id = $1`, [Id])
   .then((result) => {
     if(result.rows.length === 0){
-      return Promise.reject({ status: 404, msg: 'Incorrect path'})
+      return Promise.reject({ status: 404, msg: 'article not found'})
     }
     return result.rows[0];
   })
