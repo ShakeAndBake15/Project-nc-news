@@ -33,7 +33,7 @@ describe('GET /api/users', () => {
     .expect(200)
     .then(({ body }) => {
       const { users } = body
-      expect(users.length === 4)
+      expect(users.length).toBe(4)
       users.forEach(user => {
         expect(user).toEqual(expect.objectContaining({
           username: expect.any(String),

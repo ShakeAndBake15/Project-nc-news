@@ -9,9 +9,7 @@ exports.getTopics = (req, res, next) => {
 exports.getUsers = (req, res, next) => {
     selectUsers().then((users) => {
         res.status(200).send({ users });
-    }).catch((err) => {
-        console.log(err)
-    })
+    }).catch(next)
 }
 exports.getArticle = (req, res, next) => {
   const { article_id } = req.params
