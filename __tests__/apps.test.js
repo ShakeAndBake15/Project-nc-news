@@ -54,7 +54,7 @@ describe('Error handling', () => {
           expect(body.msg).toBe('Incorrect path')
         })
     })
-    it('status: 404, Should return with 404 "incorrect path" when parametric endpoint is incorrect', () => {
+    it('status: 404, Should return with 404 "article not found" when parametric endpoint is incorrect', () => {
       return request(app)
       .get('/api/articles/22')
       .expect(404)
@@ -62,4 +62,12 @@ describe('Error handling', () => {
         expect(body.msg).toBe('article not found')
       })
     })
+    it('status 400: Should return with "Incorrect request format" when endpoint is an incorrect data-type', () => {
+      return request(app)
+      .get('/api/articles/banana')
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Incorrect request format")
+    })
+  })
 })
