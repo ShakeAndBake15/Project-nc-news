@@ -14,8 +14,9 @@ describe('GET /api/topics',() => {
     .get('/api/topics')
     .expect(200)
     .then(({ body }) => {
-        console.log(body)
-        body.forEach(topic => {
+        const { topics } = body
+        expect(topics.length).toBe(3)
+        topics.forEach(topic => {
             expect(topic).toEqual(expect.objectContaining({
                 description: expect.any(String),
                 slug: expect.any(String)
@@ -24,3 +25,14 @@ describe('GET /api/topics',() => {
     })
   })
 });
+
+describe('Error handeling', () => {
+    it('stats 404, should respond with 404 "incorrect path" when url path is incorrect', () => {
+        return request(app)
+        .get('/api/tropics')
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe('Incorrect path')
+        })
+    })
+})
