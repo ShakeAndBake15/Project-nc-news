@@ -14,7 +14,8 @@ exports.getUsers = (req, res, next) => {
 
 exports.getArticle = (req, res, next) => {
   const { article_id } = req.params
-  selectArticle(article_id).then((article) => {
+  const { topic } = req.query
+  selectArticle(article_id, topic).then((article) => {
     res.status(200).send({ article });
   }).catch(next);
 }

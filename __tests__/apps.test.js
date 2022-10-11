@@ -52,7 +52,6 @@ describe('GET /api/articles', () => {
     .expect(200)
     .then(({ body }) => {
         const { article } = body
-        console.log(article)
         expect(article.length).toBe(12)
         expect(article[0].created_at).toBe('2020-11-03T09:12:00.000Z')
         article.forEach(article => {
@@ -67,6 +66,27 @@ describe('GET /api/articles', () => {
               comment_count: expect.any(String)
             }))
         })
+    })
+  })
+  it('Status 200: Should respond correctly with topics queries', () => {
+    return request(app)
+    .get('/api/articles?topic=mitch')
+    .expect(200)
+    .then(({ body }) => {
+      const { article } = body
+      expect(article.length).toBe(11)
+      article.forEach(article => {
+      expect(article).toEqual(expect.objectContaining({
+        article_id: expect.any(Number),
+        title: expect.any(String),
+        topic: 'mitch',
+        author: expect.any(String),
+        body: expect.any(String),
+        created_at: expect.any(String),
+        votes: expect.any(Number),
+        comment_count: expect.any(String)
+        }))
+      })
     })
   })
 })
@@ -128,10 +148,18 @@ describe('Error handling', () => {
     .then(({ body }) => {
       expect(body.msg).toBe('Incorrect path')
     })
-})
+  })
     it('status: 404, Should return with 404 "article not found" when parametric endpoint is incorrect', () => {
       return request(app)
       .get('/api/articles/22')
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe('article not found')
+      })
+    })
+    it('status: 404, Should return with 404 "collumn not found" when query endpoint is incorrect', () => {
+      return request(app)
+      .get('/api/articles?topic=dave')
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe('article not found')

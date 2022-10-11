@@ -8,7 +8,7 @@ exports.selectTopics = () => {
   })
 }
 
-exports.selectArticle = (id) => {
+exports.selectArticle = (id, queryArg) => {
   
   const queryValues = []
   let queryString = `SELECT *, 
@@ -18,11 +18,16 @@ exports.selectArticle = (id) => {
 
   if(id !== undefined){
     queryValues.push(id)
-    queryString += ` WHERE article_id = $1;`
+    queryString += ` WHERE article_id = $1`
+  }
+
+  if(queryArg !== undefined){
+    queryValues.push(queryArg)
+    queryString += ` WHERE topic = $1`
   }
 
 if(id === undefined){
-  queryString+= ` ORDER BY created_at DESC;`
+  queryString += ` ORDER BY created_at DESC;`
 }
 
   return db.query(queryString, queryValues)
