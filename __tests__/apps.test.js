@@ -64,6 +64,19 @@ describe('GET /api/articles/:article_id', () => {
   })
 })
 
+describe('PATCH /api/articles/:article_id', () => {
+  it('status 201, Should patch the articles vote count by the specified amount', () => {
+    const newVote = { inc_votes: 2 }
+    return request(app)
+    .patch('/api/articles/2')
+    .send(newVote)
+    .expect(201)
+    .then(({ body }) => {
+      expect(body.votes).toBe(2)
+    })
+  })
+})
+
 describe('Error handling', () => {
     it('status: 404, should respond with 404 "incorrect path" when url path is incorrect for topics', () => {
         return request(app)
@@ -89,12 +102,32 @@ describe('Error handling', () => {
         expect(body.msg).toBe('article not found')
       })
     })
+    it('status 404: Should return with "article not found" when when parametric endpoint is incorrect when patching', () => {
+      const newVote = { inc_votes: 2 }
+      return request(app)
+      .patch('/api/articles/54')
+      .send(newVote)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe('article not found')
+      })
+    })
     it('status 400: Should return with "Incorrect request format" when endpoint is an incorrect data-type', () => {
       return request(app)
       .get('/api/articles/banana')
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Incorrect request format")
+    })
+  })
+  it('status 400: Should return with "Incorrect request format" when endpoint is an incorrect data-type when patching', () => {
+    const newVote = { inc_votes: 2 }
+    return request(app)
+    .patch('/api/articles/fiftyFour')
+    .send(newVote)
+    .expect(400)
+    .then(({ body }) => {
+      expect(body.msg).toBe('Incorrect request format')
     })
   })
 })
