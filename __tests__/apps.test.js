@@ -3,6 +3,7 @@ const request = require('supertest');
 const db = require('../db/connection');
 const testData = require('../db/data/test-data');
 const seed = require('../db/seeds/seed');
+require('jest-sorted')
 
 beforeEach(() => seed(testData));
 
@@ -43,10 +44,56 @@ describe('GET /api/users', () => {
       })
     })
   })
-})   
+})
+
+describe('GET /api/articles', () => {
+  it('Status: 200, should respond with all articles and thier values', () => {
+    return request(app)
+    .get('/api/articles')
+    .expect(200)
+    .then(({ body }) => {
+        const { articles } = body
+        expect(articles.length).toBe(12)
+        expect(articles).toBeSorted("created_at", { descending: true })
+        articles.forEach(article => {
+            expect(article).toEqual(expect.objectContaining({
+              article_id: expect.any(Number),
+              title: expect.any(String),
+              topic: expect.any(String),
+              author: expect.any(String),
+              body: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              comment_count: expect.any(String)
+            }))
+        })
+    })
+  })
+  it('Status 200: Should respond correctly with topics queries', () => {
+    return request(app)
+    .get('/api/articles?topic=mitch')
+    .expect(200)
+    .then(({ body }) => {
+      const { articles } = body
+      expect(articles.length).toBe(11)
+      articles.forEach(article => {
+      expect(article).toEqual(expect.objectContaining({
+        article_id: expect.any(Number),
+        title: expect.any(String),
+        topic: 'mitch',
+        author: expect.any(String),
+        body: expect.any(String),
+        created_at: expect.any(String),
+        votes: expect.any(Number),
+        comment_count: expect.any(String)
+        }))
+      })
+    })
+  })
+})
 
 describe('GET /api/articles/:article_id', () => {
-  it('Status: 200, Should respond with the correct artlice specified by the user', () => {
+  it('Status: 200, Should respond with the correct article specified by the user', () => {
   return request(app)
   .get('/api/articles/1')
   .expect(200)
@@ -107,12 +154,28 @@ describe('Error handling', () => {
         expect(body.msg).toBe('Incorrect path')
       })
   })
+  it('status: 404, should respond with 404 "incorrect path" when url path is incorrect for articles', () => {
+    return request(app)
+    .get('/api/aticles')
+    .expect(404)
+    .then(({ body }) => {
+      expect(body.msg).toBe('Incorrect path')
+    })
+  })
     it('status: 404, Should return with 404 "article not found" when parametric endpoint is incorrect', () => {
       return request(app)
       .get('/api/articles/22')
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe('article not found')
+      })
+    })
+    it('status: 404, Should return with 404 "topic not found" when query endpoint is incorrect', () => {
+      return request(app)
+      .get('/api/articles?topic=dave')
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe('topic not found')
       })
     })
     it('status 404: Should return with "article not found" when when parametric endpoint is incorrect when patching', () => {
