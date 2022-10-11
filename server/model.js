@@ -9,7 +9,8 @@ exports.selectTopics = () => {
 }
 
 exports.selectArticle = (Id) => {
-  return db.query(`SELECT * 
+  return db.query(`SELECT *, 
+  (SELECT COUNT(*) FROM comments WHERE comments.article_id = articles.article_id) AS comment_count
   FROM articles
   WHERE article_id = $1`, [Id])
   .then((result) => {
