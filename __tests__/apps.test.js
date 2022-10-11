@@ -112,17 +112,25 @@ describe('GET /api/articles/:article_id', () => {
   })
 })
 
-// describe('GET /api/article/article_id/comments', () => {
-//   it('status 200: should return all the comments for a given article and their values', () => {
-//     return request(app)
-//     .get('/api/article/1/comments')
-//     .expect(200)
-//     .then(({ body }) => {
-//       const { comments } = body
-//       expect(comments.length).toBe()
-//     })
-//   })
-// })
+describe('GET /api/articles/:article_id/comments', () => {
+  it('status 200: should return all the comments for a given article and their values', () => {
+    return request(app)
+    .get('/api/articles/1/comments')
+    .expect(200)
+    .then(({ body }) => {
+      const { comments } = body
+      expect(comments.length).toBe(11)
+      expect(comments).toBeSorted("created_at", { descending: true })
+      comments.forEach(comment => expect.objectContaining({
+        comment_id: expect.any(Number),
+        votes: expect.any(Number),
+        created_at: expect.any(String),
+        author: expect.any(String),
+        body: expect.any(String)
+      }))
+    })
+  })
+})
 
 describe('PATCH /api/articles/:article_id', () => {
   it('status 201, Should patch the articles vote count by the specified amount', () => {
