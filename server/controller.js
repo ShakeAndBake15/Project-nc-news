@@ -1,4 +1,4 @@
-const { selectTopics, selectUsers, selectArticle, updateArticle } = require('./model')
+const { selectTopics, selectUsers, selectArticle, selectArticles, updateArticle } = require('./model')
 
 exports.getTopics = (req, res, next) => {
     selectTopics().then((topics) => {
@@ -11,6 +11,14 @@ exports.getUsers = (req, res, next) => {
         res.status(200).send({ users });
     }).catch(next);
 }
+
+exports.getArticles =  (req, res, next) => {
+  const { topic } = req.query
+  selectArticles(topic).then((articles) => {
+    res.status(200).send({ articles });
+  }).catch(next);
+}
+
 exports.getArticle = (req, res, next) => {
   const { article_id } = req.params
   selectArticle(article_id).then((article) => {
