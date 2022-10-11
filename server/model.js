@@ -8,7 +8,34 @@ exports.selectTopics = () => {
   })
 }
 
-exports.selectArticle = (id, queryArg) => {
+exports.selectArticles = (topic) => {
+
+const validTopics = ['mitch', 'cats', 'paper', undefined]
+
+if(!validTopics.includes(topic)){
+  return Promise.reject({ status: 404, msg: 'topic not found'});
+}
+
+const queryValues = []
+let queryString = `SELECT *, 
+(SELECT COUNT(*) FROM comments WHERE comments.article_id = articles.article_id) 
+AS comment_count
+FROM articles`
+
+if(topic !== undefined){
+  queryValues.push(topic)
+  queryString += ` WHERE topic = $1`
+}
+
+queryString += ` ORDER BY created_at DESC;`
+
+return db.query(queryString, queryValues)
+.then((result) => {
+  return result.rows;
+});
+}
+
+exports.selectArticle = (id) => {
   
   const queryValues = []
   let queryString = `SELECT *, 
@@ -20,15 +47,6 @@ exports.selectArticle = (id, queryArg) => {
     queryValues.push(id)
     queryString += ` WHERE article_id = $1`
   }
-
-  if(queryArg !== undefined){
-    queryValues.push(queryArg)
-    queryString += ` WHERE topic = $1`
-  }
-
-if(id === undefined){
-  queryString += ` ORDER BY created_at DESC;`
-}
 
   return db.query(queryString, queryValues)
   .then((result) => {
