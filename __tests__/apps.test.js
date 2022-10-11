@@ -45,8 +45,32 @@ describe('GET /api/users', () => {
   })
 })   
 
+// describe('GET /api/articles', () => {
+//   it('Status: 200, should respond with all articles and thier values', () => {
+//     return request(app)
+//     .get('/api/articles')
+//     .expect(200)
+//     .then(({ body }) => {
+//         const { articles } = body
+//         expect(articles.length).toBe(12)
+//         topics.forEach(article => {
+//             expect(article).toEqual(expect.objectContaining({
+//               article_id: expect.any(Number),
+//               title: expect.any(String),
+//               topic: expect.any(String),
+//               author: expect.any(String),
+//               body: expect.any(String),
+//               created_at: expect.any(Number),
+//               votes: expect.any(Number),
+//               comment_count: expect.any(String)
+//             }))
+//         })
+//     })
+//   })
+// })
+
 describe('GET /api/articles/:article_id', () => {
-  it('Status: 200, Should respond with the correct artlice specified by the user', () => {
+  it('Status: 200, Should respond with the correct article specified by the user', () => {
   return request(app)
   .get('/api/articles/1')
   .expect(200)
