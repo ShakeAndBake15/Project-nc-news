@@ -65,6 +65,18 @@ describe('GET /api/articles/:article_id', () => {
   })
 })
 
+// describe('GET /api/article/article_id/comments', () => {
+//   it('status 200: should return all the comments for a given article and their values', () => {
+//     return request(app)
+//     .get('/api/article/1/comments')
+//     .expect(200)
+//     .then(({ body }) => {
+//       const { comments } = body
+//       expect(comments.length).toBe()
+//     })
+//   })
+// })
+
 describe('PATCH /api/articles/:article_id', () => {
   it('status 201, Should patch the articles vote count by the specified amount', () => {
     const newVote = { inc_votes: 2 }
