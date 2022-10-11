@@ -64,6 +64,19 @@ describe('GET /api/articles/:article_id', () => {
   })
 })
 
+describe('PATCH /api/articles/:article_id', () => {
+  it('status 201, Should patch the articles vote count by the specified amount', () => {
+    const newVote = { inc_votes: 2 }
+    return request(app)
+    .patch('/api/articles/2')
+    .send(newVote)
+    .expect(201)
+    .then(({ body }) => {
+      expect(body.votes).toBe(2)
+    })
+  })
+})
+
 describe('Error handling', () => {
     it('status: 404, should respond with 404 "incorrect path" when url path is incorrect for topics', () => {
         return request(app)
