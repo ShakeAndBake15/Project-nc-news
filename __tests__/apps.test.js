@@ -43,31 +43,33 @@ describe('GET /api/users', () => {
       })
     })
   })
-})   
+})
 
-// describe('GET /api/articles', () => {
-//   it('Status: 200, should respond with all articles and thier values', () => {
-//     return request(app)
-//     .get('/api/articles')
-//     .expect(200)
-//     .then(({ body }) => {
-//         const { articles } = body
-//         expect(articles.length).toBe(12)
-//         topics.forEach(article => {
-//             expect(article).toEqual(expect.objectContaining({
-//               article_id: expect.any(Number),
-//               title: expect.any(String),
-//               topic: expect.any(String),
-//               author: expect.any(String),
-//               body: expect.any(String),
-//               created_at: expect.any(Number),
-//               votes: expect.any(Number),
-//               comment_count: expect.any(String)
-//             }))
-//         })
-//     })
-//   })
-// })
+describe('GET /api/articles', () => {
+  it('Status: 200, should respond with all articles and thier values', () => {
+    return request(app)
+    .get('/api/articles')
+    .expect(200)
+    .then(({ body }) => {
+        const { article } = body
+        console.log(article)
+        expect(article.length).toBe(12)
+        expect(article[0].created_at).toBe('2020-11-03T09:12:00.000Z')
+        article.forEach(article => {
+            expect(article).toEqual(expect.objectContaining({
+              article_id: expect.any(Number),
+              title: expect.any(String),
+              topic: expect.any(String),
+              author: expect.any(String),
+              body: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              comment_count: expect.any(String)
+            }))
+        })
+    })
+  })
+})
 
 describe('GET /api/articles/:article_id', () => {
   it('Status: 200, Should respond with the correct article specified by the user', () => {
@@ -82,7 +84,8 @@ describe('GET /api/articles/:article_id', () => {
       author: "butter_bridge",
       body: "I find this existence challenging",
       created_at: "2020-07-09T20:11:00.000Z",
-      votes: 100
+      votes: 100,
+      comment_count: "11"
     }})
     })
   })
@@ -118,6 +121,14 @@ describe('Error handling', () => {
         expect(body.msg).toBe('Incorrect path')
       })
   })
+  it('status: 404, should respond with 404 "incorrect path" when url path is incorrect for articles', () => {
+    return request(app)
+    .get('/api/aticles')
+    .expect(404)
+    .then(({ body }) => {
+      expect(body.msg).toBe('Incorrect path')
+    })
+})
     it('status: 404, Should return with 404 "article not found" when parametric endpoint is incorrect', () => {
       return request(app)
       .get('/api/articles/22')

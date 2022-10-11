@@ -8,15 +8,32 @@ exports.selectTopics = () => {
   })
 }
 
-exports.selectArticle = (Id) => {
-  return db.query(`SELECT * 
-  FROM articles
-  WHERE article_id = $1`, [Id])
+exports.selectArticle = (id) => {
+  
+  const queryValues = []
+  let queryString = `SELECT *, 
+  (SELECT COUNT(*) FROM comments WHERE comments.article_id = articles.article_id) 
+  AS comment_count
+  FROM articles`
+
+  if(id !== undefined){
+    queryValues.push(id)
+    queryString += ` WHERE article_id = $1;`
+  }
+
+if(id === undefined){
+  queryString+= ` ORDER BY created_at DESC;`
+}
+
+  return db.query(queryString, queryValues)
   .then((result) => {
     if(result.rows.length === 0){
       return Promise.reject({ status: 404, msg: 'article not found'})
+    } else if(id !== undefined){
+      return result.rows[0];
+    } else {
+      return result.rows;
     }
-    return result.rows[0];
   });
 }
 
