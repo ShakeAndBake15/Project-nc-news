@@ -102,12 +102,32 @@ describe('Error handling', () => {
         expect(body.msg).toBe('article not found')
       })
     })
+    it('status 404: Should return with "article not found" when when parametric endpoint is incorrect when patching', () => {
+      const newVote = { inc_votes: 2 }
+      return request(app)
+      .patch('/api/articles/54')
+      .send(newVote)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe('article not found')
+      })
+    })
     it('status 400: Should return with "Incorrect request format" when endpoint is an incorrect data-type', () => {
       return request(app)
       .get('/api/articles/banana')
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Incorrect request format")
+    })
+  })
+  it('status 400: Should return with "Incorrect request format" when endpoint is an incorrect data-type when patching', () => {
+    const newVote = { inc_votes: 2 }
+    return request(app)
+    .patch('/api/articles/fiftyFour')
+    .send(newVote)
+    .expect(400)
+    .then(({ body }) => {
+      expect(body.msg).toBe('Incorrect request format')
     })
   })
 })
