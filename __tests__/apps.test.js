@@ -233,6 +233,14 @@ describe('Error handling', () => {
         expect(body.msg).toBe('article not found')
       })
     })
+    it('Status 404: Should retrun with "article not found" when given an incorrect endpoint for posting comments', () => {
+      return request(app)
+      .post('/api/articles/54/comments')
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe('article not found')
+      })
+    })
     it('status 400: Should return with "Incorrect request format" when endpoint is an incorrect data-type', () => {
       return request(app)
       .get('/api/articles/banana')
