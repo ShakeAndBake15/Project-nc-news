@@ -112,6 +112,35 @@ describe('GET /api/articles/:article_id', () => {
   })
 })
 
+describe('GET /api/articles/:article_id/comments', () => {
+  it('status 200: should return all the comments for a given article and their values', () => {
+    return request(app)
+    .get('/api/articles/1/comments')
+    .expect(200)
+    .then(({ body }) => {
+      const { comments } = body
+      expect(comments.length).toBe(11)
+      expect(comments).toBeSorted("created_at", { descending: true })
+      comments.forEach(comment => expect.objectContaining({
+        comment_id: expect.any(Number),
+        votes: expect.any(Number),
+        created_at: expect.any(String),
+        author: expect.any(String),
+        body: expect.any(String)
+      }))
+    })
+  })
+  it('status 200: Should return with "there are no comments yet" when an article has no comments', () => {
+    return request(app)
+    .get('/api/articles/4/comments')
+    .expect(200)
+    .then(({ body }) => {
+    const { comments } = body
+    expect(comments).toBe('there are no comments yet')
+    })
+  })
+})
+
 describe('PATCH /api/articles/:article_id', () => {
   it('status 201, Should patch the articles vote count by the specified amount', () => {
     const newVote = { inc_votes: 2 }
@@ -173,6 +202,15 @@ describe('Error handling', () => {
       .send(newVote)
       .expect(404)
       .then(({ body }) => {
+        expect(body.msg).toBe('article not found')
+      })
+    })
+    it('Status 404: Should retrun with "article not found" when given an incorrect endpoint for vewing comments', () => {
+      return request(app)
+      .get('/api/articles/54/comments')
+      .expect(404)
+      .then(({ body }) => {
+        console.log(body)
         expect(body.msg).toBe('article not found')
       })
     })
