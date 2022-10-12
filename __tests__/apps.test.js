@@ -154,6 +154,26 @@ describe('PATCH /api/articles/:article_id', () => {
   })
 })
 
+describe('POST /api/articles/:article_id/comments', () => {
+  it('status: 201, Should post a new comment to the correct article', () => {
+    const newComment = { 
+      username: "icellusedkars",
+      body: "I am a comment"}
+      return request(app)
+      .post('/api/articles/1/comments')
+      .send(newComment)
+      .then(({ body }) => {
+        expect(body).toEqual({
+          article_id: 1, 
+          author: "icellusedkars",
+          body: "I am a comment",
+          comment_id: 19,
+          votes: 0,
+          created_at: expect.any(String)})
+      })
+  })
+})
+
 describe('Error handling', () => {
     it('status: 404, should respond with 404 "incorrect path" when url path is incorrect for topics', () => {
         return request(app)
@@ -210,7 +230,6 @@ describe('Error handling', () => {
       .get('/api/articles/54/comments')
       .expect(404)
       .then(({ body }) => {
-        console.log(body)
         expect(body.msg).toBe('article not found')
       })
     })
