@@ -130,6 +130,15 @@ describe('GET /api/articles/:article_id/comments', () => {
       }))
     })
   })
+  it('status 200: Should return with "there are no comments yet" when an article has no comments', () => {
+    return request(app)
+    .get('/api/articles/4/comments')
+    .expect(200)
+    .then(({ body }) => {
+    const { comments } = body
+    expect(comments).toBe('there are no comments yet')
+    })
+  })
 })
 
 describe('PATCH /api/articles/:article_id', () => {
@@ -193,6 +202,15 @@ describe('Error handling', () => {
       .send(newVote)
       .expect(404)
       .then(({ body }) => {
+        expect(body.msg).toBe('article not found')
+      })
+    })
+    it('Status 404: Should retrun with "article not found" when given an incorrect endpoint for vewing comments', () => {
+      return request(app)
+      .get('/api/articles/54/comments')
+      .expect(404)
+      .then(({ body }) => {
+        console.log(body)
         expect(body.msg).toBe('article not found')
       })
     })

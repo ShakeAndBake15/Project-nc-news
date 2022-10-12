@@ -1,4 +1,4 @@
-const { selectTopics, selectUsers, selectArticle, selectComments, selectArticles, updateArticle } = require('./model')
+const { selectTopics, selectUsers, selectArticle, selectComments, selectArticles, checkTopic, updateArticle } = require('./model')
 
 exports.getTopics = (req, res, next) => {
     selectTopics().then((topics) => {
@@ -14,22 +14,30 @@ exports.getUsers = (req, res, next) => {
 
 exports.getArticles =  (req, res, next) => {
   const { topic } = req.query
-  selectArticles(topic).then((articles) => {
-    res.status(200).send({ articles });
-  }).catch(next);
+  const promises = [selectArticles(topic)]
+  if(topic){
+    promises.push(checkTopic(topic))
+  }
+  Promise.all(promises).then((result) => {
+    res.status(200).send({ articles: result[0] });
+  }).catch(err => {
+    next(err);
+  });
 }
 
 exports.getArticle = (req, res, next) => {
   const { article_id } = req.params
   selectArticle(article_id).then((article) => {
     res.status(200).send({ article });
-  }).catch(next);
+  }).catch(next)
 }
 
 exports.getComments = (req, res, next) => {
   const { article_id } = req.params
+  selectArticle(article_id).then(() => { 
   selectComments(article_id).then((comments) => {
     res.status(200).send({ comments });
+    })
   }).catch(next)
 }
 
