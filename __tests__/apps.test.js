@@ -90,13 +90,13 @@ describe('GET /api/articles', () => {
       })
     })
   })
-  it('Status 200: Should sort the articles as defiend by the user', () => {
+  it('Status 200: Should sort the articles as defined by the user', () => {
     return request(app)
     .get('/api/articles?sort_by=title')
     .expect(200)
     .then(({ body }) => {
       const { articles } = body
-      expect(articles).toBeSorted({ Key: 'title' });
+      expect(articles).toBeSorted('title', { descending: true });
     })
   })
   it('Status 200: Should order the articles as defined by the user', () => {
