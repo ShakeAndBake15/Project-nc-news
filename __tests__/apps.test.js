@@ -90,6 +90,24 @@ describe('GET /api/articles', () => {
       })
     })
   })
+  it('Status 200: Should sort the articles as defiend by the user', () => {
+    return request(app)
+    .get('/api/articles?sort_by=title')
+    .expect(200)
+    .then(({ body }) => {
+      const { articles } = body
+      expect(articles).toBeSorted({ Key: 'title' });
+    })
+  })
+  it('Status 200: Should order the articles as defined by the user', () => {
+    return request(app)
+    .get('/api/articles?order=asc')
+    .expect(200)
+    .then(({ body }) => {
+      const { articles } = body
+      expect(articles).toBeSortedBy('created_at', { ascending: true });
+    })
+  })
 })
 
 describe('GET /api/articles/:article_id', () => {
@@ -284,6 +302,22 @@ describe('Error handling', () => {
     .expect(400)
     .then(({ body }) => {
       expect(body.msg).toBe('field required')
+    })
+  })
+  it('status: 400, should return with "invalid sort query" if the sort query does not match the white list', () => {
+    return request(app)
+    .get('/api/articles?sort_by=number_of_readers')
+    .expect(400)
+    .then(({ body }) => {
+      expect(body.msg).toBe('invalid sort query');
+    })
+  })
+  it('status: 400, should retun with "invalid order query" if the order query does not match the white list', () => {
+    return request(app)
+    .get('/api/articles?order=ascending')
+    .expect(400)
+    .then(({ body }) => {
+      expect(body.msg).toBe('invalid order query');
     })
   })
 })
