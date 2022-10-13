@@ -154,6 +154,26 @@ describe('PATCH /api/articles/:article_id', () => {
   })
 })
 
+describe('POST /api/articles/:article_id/comments', () => {
+  it('status: 201, Should post a new comment to the correct article', () => {
+    const newComment = { 
+      username: "icellusedkars",
+      body: "I am a comment"}
+      return request(app)
+      .post('/api/articles/1/comments')
+      .send(newComment)
+      .then(({ body }) => {
+        expect(body).toEqual({
+          article_id: 1, 
+          author: "icellusedkars",
+          body: "I am a comment",
+          comment_id: 19,
+          votes: 0,
+          created_at: expect.any(String)})
+      })
+  })
+})
+
 describe('Error handling', () => {
     it('status: 404, should respond with 404 "incorrect path" when url path is incorrect for topics', () => {
         return request(app)
@@ -210,8 +230,31 @@ describe('Error handling', () => {
       .get('/api/articles/54/comments')
       .expect(404)
       .then(({ body }) => {
-        console.log(body)
         expect(body.msg).toBe('article not found')
+      })
+    })
+    it('Status 404: Should retrun with "article not found" when given an incorrect endpoint for posting comments', () => {
+      const newComment = { 
+        username: "icellusedkars",
+        body: "I am a comment"}
+      return request(app)
+      .post('/api/articles/54/comments')
+      .send(newComment)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe('article not found')
+      })
+    })
+    it('Stauts 404: Should return with "no user found" when passed with an incorrect username', () => {
+      const newComment = {
+        username: 'unknown_user',
+        body: "I am a comment"}
+      return request(app)
+      .post('/api/articles/1/comments')
+      .send(newComment)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe('no user found')
       })
     })
     it('status 400: Should return with "Incorrect request format" when endpoint is an incorrect data-type', () => {
@@ -230,6 +273,17 @@ describe('Error handling', () => {
     .expect(400)
     .then(({ body }) => {
       expect(body.msg).toBe('Incorrect request format')
+    })
+  })
+  it('status 400: Should return with "field required" if an essential field is not completed for posting', () => {
+    const newComment = {
+      body: "I am a comment"}
+    return request(app)
+    .post('/api/articles/1/comments')
+    .send(newComment)
+    .expect(400)
+    .then(({ body }) => {
+      expect(body.msg).toBe('field required')
     })
   })
 })

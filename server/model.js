@@ -81,15 +81,33 @@ exports.selectUsers = () => {
   })
 }
 
-exports.updateArticle = (inc_votes, Id) => {
+exports.updateArticle = (inc_votes, id) => {
   return db.query(`UPDATE articles
     SET votes = votes + $1
     WHERE article_id = $2
-    RETURNING *;`,[inc_votes, Id])
+    RETURNING *;`,[inc_votes, id])
     .then((result) => {
       if(result.rows.length === 0){
         return Promise.reject({ status: 404, msg: 'article not found'})
       }
       return result.rows[0];
     })
+}
+
+exports.insertComment = (id, newComment) => {
+  const { username, body } = newComment;
+
+  if(username !== undefined && body !== undefined){
+  return db.query(
+    `INSERT INTO comments
+      (author, body, article_id)
+    VALUES
+      ($1, $2, $3)
+    RETURNING *;`, [username, body, id])
+    .then((result) => {
+      return result.rows[0];
+    })
+  } else {
+    return Promise.reject({ status: 400, msg: 'field required'});
+  }
 }

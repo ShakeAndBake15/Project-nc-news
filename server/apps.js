@@ -1,5 +1,5 @@
 const express = require('express');
-const { getTopics, getUsers, getArticle, getArticles, getComments, patchArticle } = require('./controller');
+const { getTopics, getUsers, getArticle, getArticles, getComments, patchArticle, postComment } = require('./controller');
 
 
 const app = express();
@@ -11,6 +11,7 @@ app.get('/api/articles', getArticles)
 app.get('/api/articles/:article_id/comments', getComments)
 app.get('/api/articles/:article_id', getArticle)
 app.patch('/api/articles/:article_id', patchArticle)
+app.post('/api/articles/:article_id/comments', postComment)
 
 app.use((err, req, res, next) => {
   if(err.status && err.msg){
@@ -19,6 +20,14 @@ app.use((err, req, res, next) => {
     next(err)
   }
 });
+
+app.use((err, req, res, next) => {
+  if(err.code === "23503") {
+    res.status(404).send({msg: 'no user found'})
+  } else {
+    next(err);
+  }
+})
 
 app.use((err, req, res, next) => {
   if(err.code === "22P02") {

@@ -1,4 +1,4 @@
-const { selectTopics, selectUsers, selectArticle, selectComments, selectArticles, checkTopic, updateArticle } = require('./model')
+const { selectTopics, selectUsers, selectArticle, selectComments, selectArticles, checkTopic, updateArticle, insertComment } = require('./model')
 
 exports.getTopics = (req, res, next) => {
     selectTopics().then((topics) => {
@@ -29,7 +29,7 @@ exports.getArticle = (req, res, next) => {
   const { article_id } = req.params
   selectArticle(article_id).then((article) => {
     res.status(200).send({ article });
-  }).catch(next)
+  }).catch(next);
 }
 
 exports.getComments = (req, res, next) => {
@@ -38,7 +38,7 @@ exports.getComments = (req, res, next) => {
   selectComments(article_id).then((comments) => {
     res.status(200).send({ comments });
     })
-  }).catch(next)
+  }).catch(next);
 }
 
 exports.patchArticle = (req, res, next) => {
@@ -46,5 +46,15 @@ exports.patchArticle = (req, res, next) => {
   const { inc_votes } = req.body
   updateArticle(inc_votes, article_id).then((body) => {
     res.status(201).send(body);
+  }).catch(next);
+}
+
+exports.postComment = (req, res, next) => {
+  const { article_id } = req.params
+  const newComment = req.body
+  selectArticle(article_id).then(() => {
+  return insertComment(article_id, newComment)
+  }).then((result) => {
+    res.status(201).send(result);
   }).catch(next);
 }
