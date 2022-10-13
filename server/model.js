@@ -19,7 +19,18 @@ exports.checkTopic = (query) => {
   })
 }
 
-exports.selectArticles = (topic) => {
+exports.selectArticles = (topic, sort = 'created_at', order = 'DESC') => {
+
+  const validSortQueires = ['article_id', 'title', 'created_at', 'topic', 'author', 'body', 'votes', 'comment_count']
+  const ValidOrderQueries = ['asc', 'ASC', 'desc', 'DESC']
+
+  if(!validSortQueires.includes(sort)){
+    return Promise.reject({ status: 400, msg: 'invalid sort query'})
+  }
+
+  if(!ValidOrderQueries.includes(order)){
+    return Promise.reject({ status: 400, msg: 'invalid order query'})
+  }
 
 const queryValues = []
 let queryString = `SELECT *, 
@@ -32,8 +43,7 @@ if(topic !== undefined){
   queryString += ` WHERE topic = $1`
 }
 
-queryString += ` ORDER BY created_at DESC;`
-
+queryString += ` ORDER BY ${sort} ${order};`
 return db.query(queryString, queryValues)
 .then((result) => {
   return result.rows;

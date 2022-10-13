@@ -1,4 +1,8 @@
+
 const { selectTopics, selectUsers, selectArticle, selectComments, selectArticles, checkTopic, updateArticle, insertComment, removeComment } = require('./model')
+const articles = require('../db/data/test-data/articles');
+const { selectTopics, selectUsers, selectArticle, selectComments, selectArticles, checkTopic, updateArticle, insertComment } = require('./model')
+
 
 exports.getTopics = (req, res, next) => {
     selectTopics().then((topics) => {
@@ -14,7 +18,9 @@ exports.getUsers = (req, res, next) => {
 
 exports.getArticles =  (req, res, next) => {
   const { topic } = req.query
-  const promises = [selectArticles(topic)]
+  const { sort_by } = req.query
+  const { order } = req.query
+  const promises = [selectArticles(topic, sort_by, order)]
   if(topic){
     promises.push(checkTopic(topic))
   }
