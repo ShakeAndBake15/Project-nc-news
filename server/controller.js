@@ -1,7 +1,5 @@
 
 const { selectTopics, selectUsers, selectArticle, selectComments, selectArticles, checkTopic, updateArticle, insertComment, removeComment } = require('./model')
-const articles = require('../db/data/test-data/articles');
-const { selectTopics, selectUsers, selectArticle, selectComments, selectArticles, checkTopic, updateArticle, insertComment } = require('./model')
 
 
 exports.getTopics = (req, res, next) => {

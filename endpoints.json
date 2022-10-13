@@ -4,15 +4,17 @@
   },
   "GET /api/topics": {
     "description": "serves an array of all topics",
+    "parameters":[],
     "queries": [],
-    "exampleResponse": {
+    "example response": {
       "topics": [{ "slug": "football", "description": "Footie!" }]
     }
   },
   "GET /api/articles": {
     "description": "serves an array of all topics",
+    "parameters":[],
     "queries": ["author", "topic", "sort_by", "order"],
-    "exampleResponse": {
+    "example response": {
       "articles": [
         {
           "title": "Seafood substitutions are increasing",
@@ -23,5 +25,70 @@
         }
       ]
     }
+  },
+  "GET /api/users": {
+    "description": "serves an array of all users",
+    "parameters":[],
+    "queries": [],
+    "example response": {
+      "users": [{ 
+        "username": "butter_bridge", 
+        "name": "jonny", 
+        "avatar_url":"https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg'}]"}]
+    }
+  },
+  "GET /api/articles/:article_id": {
+    "description": "serves an array with the indiviaul article by article ID",
+    "parameter": ["article_id"],
+    "example response": { "article": [{ 
+      "article_id": 1,
+      "title": "Living in the shadow of a great man",
+      "topic": "mitch",
+      "author": "butter_bridge",
+      "body": "I find this existence challenging",
+      "created_at": "2020-07-09T20:11:00.000Z",
+      "votes": 100,
+      "comment_count": "11"
+    }]}
+  },
+  "GET /api/articles/:article_id/comments": {
+    "description": "serves an array of all comments attributed to a specified article",
+    "parameter": ["article_id"],
+    "example response": { "comments": [{
+      "body": "What do you see? I have no idea where this will lead us. This place I speak of, is known as the Black Lodge.",
+      "votes": 16,
+      "author": "icellusedkars",
+      "article_id": 5,
+      "created_at": 1591682400000
+    }]}
+  },
+  "PATCH /api/articles/:article_id": {
+    "description": "Permits the user to update a collumn of an article",
+    "paramters": ["article_id"],
+    "body": ["title", "topic", "author", "body", "votes"],
+    "example response": { "article": [{ 
+      "article_id": 1,
+      "title": "Living in the shadow of a great man",
+      "topic": "mitch",
+      "author": "butter_bridge",
+      "body": "I find this existence challenging",
+      "created_at": "2020-07-09T20:11:00.000Z",
+      "votes": 100,
+      "comment_count": "11"
+    }]}
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "Permits the user to post a new comments with a valid ID and body of text",
+    "parameters":["article_id"],
+    "body": ["username", "body"],
+    "example response": { "comment": [{
+      "username": "icellusedkars",
+      "body": "I am a comment"
+    }]}
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "Permists the user to delete a comment by comment ID",
+    "parameters": ["comment_id"],
+    "queries": []
   }
 }
