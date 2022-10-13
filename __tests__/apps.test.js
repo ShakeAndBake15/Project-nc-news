@@ -234,11 +234,27 @@ describe('Error handling', () => {
       })
     })
     it('Status 404: Should retrun with "article not found" when given an incorrect endpoint for posting comments', () => {
+      const newComment = { 
+        username: "icellusedkars",
+        body: "I am a comment"}
       return request(app)
       .post('/api/articles/54/comments')
+      .send(newComment)
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe('article not found')
+      })
+    })
+    it('Stauts 404: Should return with "no user found" when passed with an incorrect username', () => {
+      const newComment = {
+        username: 'unknown_user',
+        body: "I am a comment"}
+      return request(app)
+      .post('/api/articles/1/comments')
+      .send(newComment)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe('no user found')
       })
     })
     it('status 400: Should return with "Incorrect request format" when endpoint is an incorrect data-type', () => {
@@ -257,6 +273,17 @@ describe('Error handling', () => {
     .expect(400)
     .then(({ body }) => {
       expect(body.msg).toBe('Incorrect request format')
+    })
+  })
+  it('status 400: Should return with "field required" if an essential field is not completed for posting', () => {
+    const newComment = {
+      body: "I am a comment"}
+    return request(app)
+    .post('/api/articles/1/comments')
+    .send(newComment)
+    .expect(400)
+    .then(({ body }) => {
+      expect(body.msg).toBe('field required')
     })
   })
 })

@@ -96,6 +96,8 @@ exports.updateArticle = (inc_votes, id) => {
 
 exports.insertComment = (id, newComment) => {
   const { username, body } = newComment;
+
+  if(username !== undefined && body !== undefined){
   return db.query(
     `INSERT INTO comments
       (author, body, article_id)
@@ -105,4 +107,7 @@ exports.insertComment = (id, newComment) => {
     .then((result) => {
       return result.rows[0];
     })
+  } else {
+    return Promise.reject({ status: 400, msg: 'field required'});
+  }
 }
