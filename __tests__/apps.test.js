@@ -162,6 +162,7 @@ describe('POST /api/articles/:article_id/comments', () => {
       return request(app)
       .post('/api/articles/1/comments')
       .send(newComment)
+      .expect(201)
       .then(({ body }) => {
         expect(body).toEqual({
           article_id: 1, 
@@ -171,6 +172,14 @@ describe('POST /api/articles/:article_id/comments', () => {
           votes: 0,
           created_at: expect.any(String)})
       })
+  })
+})
+
+describe('DELETE /api/comments/:comment_id', () => {
+ it('Status 204, Should delete the comment specided by its ID', () => {
+  return request(app)
+  .delete('/api/comments/1')
+  .expect(204)
   })
 })
 
@@ -255,6 +264,14 @@ describe('Error handling', () => {
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe('no user found')
+      })
+    })
+    it('Status: 404, should return with "comment not found" if the comment ID is out of scope', () => {
+      return request(app)
+      .delete('/api/comments/54')
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe('comment not found')
       })
     })
     it('status 400: Should return with "Incorrect request format" when endpoint is an incorrect data-type', () => {
