@@ -46,6 +46,30 @@ describe('GET /api/users', () => {
   })
 })
 
+describe('GET /api/users/:username', () => {
+  it('Status 200: should return with an array containing a single user defined by the user', () => {
+    return request(app)
+    .get('/api/users/butter_bridge')
+    .expect(200)
+    .then(({ body }) => {
+      expect(body).toEqual({ user: {
+        username: 'butter_bridge',
+        name: 'jonny',
+        avatar_url: 'https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg'
+      }})
+    })
+  })
+  it.only('Status 200: Should return with "user does not exist" is the username does not match records', () => {
+    return request(app)
+    .get('/api/users/not_a_user')
+    .expect(200)
+    .then(({ body }) => {
+      const { user } = body
+      expect(user).toBe('user does not exist')
+    })
+  })
+})
+
 describe('GET /api/articles', () => {
   it('Status: 200, should respond with all articles and thier values', () => {
     return request(app)
