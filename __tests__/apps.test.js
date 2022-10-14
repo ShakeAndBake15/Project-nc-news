@@ -59,7 +59,7 @@ describe('GET /api/users/:username', () => {
       }})
     })
   })
-  it.only('Status 200: Should return with "user does not exist" is the username does not match records', () => {
+  it('Status 200: Should return with "user does not exist" is the username does not match records', () => {
     return request(app)
     .get('/api/users/not_a_user')
     .expect(200)
