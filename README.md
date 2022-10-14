@@ -1,55 +1,42 @@
 # Northcoders News API
 
-## Kanban
+## Link to the hosted api
 
-### Link to your Trello Board here: https://trello.com/b/7yiHe1nI
+https://al-nc-news.herokuapp.com/api/:endpoint
 
-To keep track of the tasks involved in this project we're going to use a kanban board. Ensure that you work on one _ticket_ at time. You can click on the ticket to find out more information about what is required for the feature. A ticket is not considered complete unless both the happy path and errors response are handled. You can make use of the checklist on each ticket to keep track of the errors you want to handle. You can also make use of [error-handling.md](error-handling.md) to consider the error codes we may wish to respond with.
+(Please note, due to changes with the PaaS, this will no longer be availble from 28/11/2022)
 
-**Please ensure you work through the tickets in numerical order.**
+## NC news
 
-## Git Branching and Pull Requests
+NC news is to be fully functional site, that allows users to read articles, comments, and update, post and delete comments on those articles as well. The backend of this project has been writeen entirely using Node.js and ustilises Express, Postgres SQL and Superstest and Jest for test suites. For navigating the site and viewing different content, please see endpoints.json for all possible endpoints, quieris and parameters. The frontend of this project is due to be completed using React.js and is due for completion by mid-Novemeber 2022.
 
-You will be working on each ticket on a new **branch**.
+## Dev instructions
 
-To create and switch to a new git branch use the command:
+npm library (CLI: npm init)
+Post-gres (CLI: npm install pg)
+pg-format (CLI: npm install pg-format)
+dotenv (CLI: npm install dotenv --save)
+express (CLI: npm install express)
+husky (CLI: npm install husky --save-dev)
+jest (CLI: npm install jest -d)
+jest-sorted (CLI: npm install jest-sorted -d)
+supertest (CLI: npm install supertest -d)
 
-```
-git checkout -b <new branch name>
-```
+Cloning - To clone this repo, please do so on github via -> https://github.com/ShakeAndBake15/Project-nc-news -> code -> copy the link - > and then on your CLI once in the correct folder $ git clone *paste link*
 
-This will create a branch and move over to that branch. (Omit the `-b` flag if you wish to switch to an already existing branch).
+Testing - Once jest, jest-sorted and supertest dependancies have been installed run $ npm test, or $ npm test *test suite name* to run testing operations.
 
-We recommend that you name the branch after the number assigned to each ticket via the header. eg. `ncnews-1`
+Seeding - to seed the databases, please run $ npm run seed
 
-When pushing the branch to git hub ensure that you make reference to the branch you are pushing to on the remote.
+## Versions needed
 
-```
-git push origin <branch name>
-```
+Postgres - 8.8.0
 
-From github you can make a pull request and share the link and ticket number via a pull request specific nchelp using the command `nchelp pr`. A tutor will swing by to review your code. Ensure that you keep your trello up to date whilst you await the PR approval. Regular `nchelp` will be available for when you need support.
-
-Once a pull request been accepted be sure to switch back to the main branch and pull down the updated changes.
-
-```
-git checkout main
-
-git pull origin main
-```
-
-You can tidy up your local branches once they have been pull into main by deleting them:
-
-```
-git branch -D <local branch>
-```
+node.js - v18.7.0
 
 ## Husky
 
 To ensure we are not commiting broken code this project makes use of git hooks. Git hooks are scripts triggered during certain events in the git lifecycle. Husky is a popular package which allows us to set up and maintain these scripts. This project makes use a _pre-commit hook_. When we attempt to commit our work, the script defined in the `pre-commit` file will run. If any of our tests fail than the commit will be aborted.
-
-The [Husky documentation](https://typicode.github.io/husky/#/) explains how to configure Husky for your own project as well as creating your own custom hooks.\_
-
 
 ## Connencting to both databases
 
