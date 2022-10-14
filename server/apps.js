@@ -1,18 +1,17 @@
 const express = require('express');
-const { getTopics, getUsers, getArticle, getArticles, getComments, patchArticle, postComment, deleteComment } = require('./controller');
 
 
 const app = express();
 app.use(express.json());
+const articles = require('../routes/articles')
+const comments = require('../routes/comments')
+const topics = require('../routes/topics')
+const users = require('../routes/users')
 
-app.get('/api/topics', getTopics);
-app.get('/api/users', getUsers)
-app.get('/api/articles', getArticles)
-app.get('/api/articles/:article_id/comments', getComments)
-app.get('/api/articles/:article_id', getArticle)
-app.patch('/api/articles/:article_id', patchArticle)
-app.post('/api/articles/:article_id/comments', postComment)
-app.delete('/api/comments/:comment_id', deleteComment)
+app.use("/api/articles", articles)
+app.use("/api/comments", comments)
+app.use("/api/topics", topics)
+app.use("/api/users", users)
 
 app.use((err, req, res, next) => {
   if(err.status && err.msg){
